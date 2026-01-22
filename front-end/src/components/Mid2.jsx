@@ -10,15 +10,23 @@ const missions = [
 
 export default function Mid2() {
   const refs = useRef([]);
-  const [activeIndex, setActiveIndex] = useState(-1); // 👈 NO CARD INITIALLY
+  const [activeIndex, setActiveIndex] = useState(-1); // no card initially
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Number(entry.target.dataset.index);
-            setActiveIndex(idx - 1); // 👈 SHIFT INDEX
+          if (!entry.isIntersecting) return;
+
+          const idx = Number(entry.target.dataset.index);
+
+          // EMPTY SCREEN → hide all cards
+          if (idx === -1) {
+            setActiveIndex(-1);
+          } 
+          // CARD SCREENS
+          else {
+            setActiveIndex(idx - 1);
           }
         });
       },
@@ -31,7 +39,7 @@ export default function Mid2() {
 
   return (
     <section className="relative w-full bg-black">
-      {/* TOTAL SCROLL HEIGHT */}
+      {/* TOTAL SCROLL SPACE */}
       <div className="relative h-[700vh]">
 
         {/* ================= STICKY BACKGROUND ================= */}
@@ -90,15 +98,20 @@ export default function Mid2() {
         </div>
 
         {/* ================= SCROLL TRIGGERS ================= */}
-        {/* FIRST EMPTY SCREEN (NO CARD) */}
-        <div className="h-screen" />
+
+        {/* EMPTY SCREEN (background only) */}
+        <div
+          ref={(el) => (refs.current[0] = el)}
+          data-index={-1}
+          className="h-screen"
+        />
 
         {/* CARD TRIGGERS */}
         {missions.map((_, index) => (
           <div
             key={index}
-            ref={(el) => (refs.current[index] = el)}
-            data-index={index + 1} // 👈 OFFSET
+            ref={(el) => (refs.current[index + 1] = el)}
+            data-index={index + 1}
             className="h-screen"
           />
         ))}
