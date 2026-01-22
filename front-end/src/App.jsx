@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home";
-
+import Mid  from "./components/Mid2";
 
 const App = () => {
   return (
@@ -9,7 +9,7 @@ const App = () => {
       {/* Navbar */}
       <Navbar />
       <Home />
-      
+      <Mid />
 
       
     </div>

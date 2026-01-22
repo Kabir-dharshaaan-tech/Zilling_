@@ -46,18 +46,32 @@ const Home = () => {
 
   return (
     <>
-      {/* HERO */}
+      {/* ================= HERO ================= */}
       <section className="h-screen bg-black flex items-center px-16">
         <h1 className="text-white text-[5rem] font-extrabold uppercase leading-none">
           INTERPLANETARY <br /> OBSERVATORY
         </h1>
       </section>
 
-      {/* SCROLL SECTION */}
-      <section className="min-h-[200vh] bg-[#0e0e0e] px-16 pt-48">
+      {/* ================= SCROLL SECTION ================= */}
+      <section
+        className="relative min-h-[200vh] px-16 pt-48 overflow-hidden"
+        style={{
+          backgroundColor: "#0b0b0b",
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px),
+            radial-gradient(circle at center, rgba(255,255,255,0.08), transparent 70%)
+          `,
+          backgroundSize: "64px 64px, 64px 64px, 100% 100%",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* vignette */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.65))]" />
 
         {/* ===== HEADLINE ===== */}
-        <div ref={headlineRef} className="space-y-2">
+        <div ref={headlineRef} className="relative space-y-2">
           {/* LINE 1 */}
           <div className="relative w-fit">
             <h1 className="text-[6rem] font-extrabold uppercase text-[#2a2a2a]">
@@ -66,7 +80,7 @@ const Home = () => {
             <h1
               className="absolute inset-0 text-[6rem] font-extrabold uppercase text-white overflow-hidden"
               style={{
-                clipPath: `inset(0 ${100 - line1 * 100}% 0 0)`
+                clipPath: `inset(0 ${100 - line1 * 100}% 0 0)`,
               }}
             >
               WE OBSERVE
@@ -81,7 +95,7 @@ const Home = () => {
             <h1
               className="absolute inset-0 text-[6rem] font-extrabold uppercase text-white overflow-hidden"
               style={{
-                clipPath: `inset(0 ${100 - line2 * 100}% 0 0)`
+                clipPath: `inset(0 ${100 - line2 * 100}% 0 0)`,
               }}
             >
               DISTANT WORLDS
@@ -99,7 +113,7 @@ const Home = () => {
           <p
             className="absolute inset-0 text-[2.8rem] font-extrabold uppercase text-white overflow-hidden"
             style={{
-              clipPath: `inset(0 ${100 - progress * 100}% 0 0)`
+              clipPath: `inset(0 ${100 - progress * 100}% 0 0)`,
             }}
           >
             FROM REMOTE COLONIES TO DESERTED OUTPOSTS, EVERY LOCATION WE REACH
@@ -108,7 +122,7 @@ const Home = () => {
         </div>
 
         {/* ===== WANT ===== */}
-        <div ref={wantSectionRef} className="mt-32 space-y-2">
+        <div ref={wantSectionRef} className="relative mt-32 space-y-2">
           {["WANT", "WANT", "WANT"].map((text, i) => {
             const p = [want1, want2, want3][i];
             return (
@@ -119,7 +133,7 @@ const Home = () => {
                 <p
                   className="absolute inset-0 text-[2.8rem] font-extrabold uppercase text-white overflow-hidden"
                   style={{
-                    clipPath: `inset(0 ${100 - p * 100}% 0 0)`
+                    clipPath: `inset(0 ${100 - p * 100}% 0 0)`,
                   }}
                 >
                   {text}
@@ -128,7 +142,6 @@ const Home = () => {
             );
           })}
         </div>
-
       </section>
     </>
   );
