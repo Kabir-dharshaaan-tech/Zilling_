@@ -10,14 +10,11 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="w-full flex justify-center mt-8">
+    /* FIXED WRAPPER */
+    <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
       {/* Outer dark frame */}
       <div
-        className="
-          bg-black
-          px-2 py-2
-          shadow-xl
-        "
+        className="bg-black px-2 py-2 shadow-xl"
         style={{
           clipPath:
             "polygon(3% 0%, 97% 0%, 100% 50%, 97% 100%, 3% 100%, 0% 50%)",
@@ -25,11 +22,7 @@ const Navbar = () => {
       >
         {/* Inner orange bar */}
         <nav
-          className="
-            flex items-center
-            bg-orange-500
-            overflow-hidden
-          "
+          className="flex items-center bg-orange-500 overflow-hidden"
           style={{
             clipPath:
               "polygon(3% 0%, 97% 0%, 100% 50%, 97% 100%, 3% 100%, 0% 50%)",
