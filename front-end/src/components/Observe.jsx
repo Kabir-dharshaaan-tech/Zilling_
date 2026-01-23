@@ -1,5 +1,6 @@
 
 
+
 import { useEffect, useRef, useState } from "react";
 
 /* ================= TEXT LINES ================= */
@@ -41,7 +42,6 @@ export default function Observe() {
             Math.max(-rect.top / (window.innerHeight * 0.8), 0),
             1
           );
-
           setActiveLine(Math.floor(progress * LINES.length));
         };
 
@@ -106,10 +106,7 @@ export default function Observe() {
                 key={i}
                 className="relative overflow-hidden text-[3.2rem] font-extrabold leading-tight"
               >
-                <span className="block text-neutral-700">
-                  {line}
-                </span>
-
+                <span className="block text-neutral-700">{line}</span>
                 <span
                   className="absolute left-0 top-0 block text-[#f4f1e8] transition-all duration-700 ease-out"
                   style={{
@@ -127,10 +124,7 @@ export default function Observe() {
       </section>
 
       {/* ================= STICKY SIDEWAYS SECTION ================= */}
-      <section
-        ref={horizontalRef}
-        className="relative h-[300vh] bg-black"
-      >
+      <section ref={horizontalRef} className="relative h-[300vh] bg-black">
         <div className="sticky top-0 flex h-screen items-center overflow-hidden">
           <div
             ref={trackRef}
@@ -148,6 +142,20 @@ export default function Observe() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ================= CREW REGISTRY SECTION ================= */}
+      <section className="relative min-h-[120vh] bg-black text-[#f4f1e8]">
+        {/* GRID */}
+        <div className="absolute inset-0 bg-grid pointer-events-none" />
+
+        <div className="relative mx-auto max-w-7xl px-12 pt-40">
+          <h1 className="text-[9rem] font-extrabold leading-[0.9] tracking-tight">
+            CREW
+            <br />
+            REGISTRY
+          </h1>
         </div>
       </section>
     </>
