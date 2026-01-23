@@ -103,12 +103,16 @@ export default function Observe() {
           const offset = scrollY - crewSectionRef.current.offsetTop - i * 200; // stagger images
           const progress = Math.min(Math.max(offset / vh, 0), 1);
 
-          const radius = vh * 0.4;
+          const radius = vh * 0.2; // vertical arc
           const angle = Math.PI * progress;
 
           const xPos = vw - (vw + 200) * progress;
-          const yPos = radius - Math.sin(angle) * radius;
-          const scale = 0.7 + progress * 0.3;
+
+          // Shift the arc downward by adding an offset to yPos
+          const yOffset = vh * 0.25; // lower the peak by 25% of viewport height
+          const yPos = yOffset + radius - Math.sin(angle) * radius;
+
+          const scale = 0.8 + progress * 0.2;
 
           let opacity = 0;
           if (progress > 0) opacity = 1;
@@ -122,7 +126,6 @@ export default function Observe() {
 
     window.addEventListener("scroll", handleScroll);
     handleScroll();
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -193,16 +196,16 @@ export default function Observe() {
             <div
               key={i}
               ref={(el) => (imageRefs.current[i] = el)}
-              className="absolute w-44 h-44 bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl"
+              className="absolute w-64 h-64 bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl"
               style={{
                 transform: `translate(${window.innerWidth}px, ${
                   window.innerHeight * 0.5
-                }px) scale(0.7)`,
+                }px) scale(0.8)`,
                 opacity: 0,
               }}
             >
               <img
-                src={`https://picsum.photos/400/400?random=${img}`}
+                src={`https://picsum.photos/500/500?random=${img}`}
                 alt="scroll"
                 className="w-full h-full object-cover rounded-xl"
               />
@@ -211,6 +214,7 @@ export default function Observe() {
         </div>
       </div>
 
+      
     </>
   );
 }
