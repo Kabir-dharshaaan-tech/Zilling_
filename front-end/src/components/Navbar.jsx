@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const menuItems = [
     { label: "INDEX", path: "/" },
-    { label: "OBSERVATORY", path: "/" },
+    { label: "OBSERVATORY", path: "/observatory" }, // ✅ updated
     { label: "EXPEDITION", path: "/" },
     { label: "TRACES", path: "/" },
     { label: "CONTACT", path: "/contact" },
