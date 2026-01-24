@@ -1,14 +1,15 @@
 
 
-
 import React, { useEffect, useRef, useState } from "react";
+import bannerImage from "../assets/banner.png"; 
 
 const GRID_SIZE = 80;
 const clamp = (v) => Math.min(Math.max(v, 0), 1);
 
+/* ================= GRID LAYER ================= */
 const GridLayer = ({ cell }) => (
   <>
-    {/* GRID (for white background) */}
+    {/* GRID */}
     <div
       className="absolute inset-0 pointer-events-none"
       style={{
@@ -50,11 +51,12 @@ const GridLayer = ({ cell }) => (
         })
       )}
 
-    {/* VIGNETTE FOR WHITE */}
+    {/* VIGNETTE */}
     <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0)_40%,rgba(0,0,0,0.15))]" />
   </>
 );
 
+/* ================= HOME ================= */
 const Home = () => {
   const headlineRef = useRef(null);
   const wantSectionRef = useRef(null);
@@ -85,6 +87,7 @@ const Home = () => {
 
   const line1 = clamp(progress * 2);
   const line2 = clamp((progress - 0.5) * 2);
+
   const want = [
     clamp(wantProgress * 3),
     clamp((wantProgress - 0.33) * 3),
@@ -101,14 +104,18 @@ const Home = () => {
 
   return (
     <>
-      {/* HEADER */}
-      <section className="h-screen bg-white flex items-center px-16">
-        <h1 className="text-black text-[5rem] font-extrabold uppercase">
-          INTERPLANETARY <br /> OBSERVATORY
-        </h1>
-      </section>
+      
+      {/* ================= HEADER WITH FULL-WIDTH BANNER ================= */}
+<section className="relative h-screen w-screen bg-white overflow-hidden">
+  <img
+    src={bannerImage}
+    alt="Zilling Billing System by Zippy"
+    className="absolute inset-0 w-full h-full object-cover"
+  />
+</section>
 
-      {/* SECTION 1 */}
+
+      {/* ================= SECTION 1 ================= */}
       <section
         ref={headlineRef}
         className="relative h-screen bg-white px-16 pt-48 overflow-hidden"
@@ -116,6 +123,7 @@ const Home = () => {
         onMouseLeave={() => setCell({ col: -1, row: -1 })}
       >
         <GridLayer cell={cell} />
+
         <div className="relative z-10 space-y-2">
           {["WE OBSERVE", "DISTANT WORLDS"].map((t, i) => {
             const p = i === 0 ? line1 : line2;
@@ -136,13 +144,14 @@ const Home = () => {
         </div>
       </section>
 
-      {/* SECTION 2 */}
+      {/* ================= SECTION 2 ================= */}
       <section
         className="relative h-screen bg-white px-16 flex items-center overflow-hidden"
         onMouseMove={mouse}
         onMouseLeave={() => setCell({ col: -1, row: -1 })}
       >
         <GridLayer cell={cell} />
+
         <div className="relative z-10 max-w-4xl">
           <p className="text-[2.8rem] font-extrabold uppercase text-[#bdbdbd]">
             FROM REMOTE COLONIES TO DESERTED OUTPOSTS, EVERY LOCATION WE REACH
@@ -158,7 +167,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* SECTION 3 */}
+      {/* ================= SECTION 3 ================= */}
       <section
         ref={wantSectionRef}
         className="relative h-screen bg-white px-16 pt-32 overflow-hidden"
@@ -166,6 +175,7 @@ const Home = () => {
         onMouseLeave={() => setCell({ col: -1, row: -1 })}
       >
         <GridLayer cell={cell} />
+
         <div className="relative z-10 space-y-2">
           {["WANT", "WANT", "WANT"].map((t, i) => (
             <div key={i} className="relative w-fit">
