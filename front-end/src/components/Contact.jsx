@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState } from "react";
 
 const faqs = [
@@ -14,7 +18,7 @@ const Contact = () => {
   return (
     <>
       {/* ================= CONTACT FORM ================= */}
-      <section className="min-h-screen bg-[#242424] text-[#e8e3d6] px-8 md:px-20 py-20">
+      <section className="min-h-screen bg-[#f8f8f8] text-[#242424] px-8 md:px-20 py-20">
         <div className="flex justify-between items-center mb-16">
           <p className="text-xs tracking-widest uppercase opacity-70">
             Communication Form
@@ -42,25 +46,25 @@ const Contact = () => {
           <input
             type="text"
             placeholder="IDENTIFICATION"
-            className="w-full bg-[#3a3a3a] text-sm tracking-widest placeholder:opacity-40 px-6 py-4 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e8e3d6]/30"
+            className="w-full bg-white text-sm tracking-widest placeholder:opacity-40 px-6 py-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <input
             type="text"
             placeholder="UNIT ADDRESS"
-            className="w-full bg-[#3a3a3a] text-sm tracking-widest placeholder:opacity-40 px-6 py-4 rounded-md focus:outline-none focus:ring-1 focus:ring-[#e8e3d6]/30"
+            className="w-full bg-white text-sm tracking-widest placeholder:opacity-40 px-6 py-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <textarea
             rows="6"
             placeholder="TRANSMISSION DETAILS"
-            className="w-full bg-[#3a3a3a] text-sm tracking-widest placeholder:opacity-40 px-6 py-4 rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-[#e8e3d6]/30"
+            className="w-full bg-white text-sm tracking-widest placeholder:opacity-40 px-6 py-4 rounded-md border border-gray-300 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           <div className="pt-8">
             <button
               type="submit"
-              className="w-full border border-[#e8e3d6]/30 py-4 text-xs tracking-[0.3em] uppercase hover:bg-[#e8e3d6] hover:text-[#242424] transition-all duration-300"
+              className="w-full border border-blue-500 py-4 text-xs tracking-[0.3em] uppercase hover:bg-blue-500 hover:text-white transition-all duration-300"
             >
               Send Transmission
             </button>
@@ -70,13 +74,7 @@ const Contact = () => {
 
       {/* ================= FAQ SECTION ================= */}
       <section
-        className="relative text-[#e8e3d6] px-8 md:px-20 py-32"
-        style={{
-          backgroundColor: "#0f0f0f",
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
+        className="relative text-[#242424] px-8 md:px-20 py-32 bg-white"
       >
         <div className="grid md:grid-cols-2 gap-20 items-start">
           {/* Left Heading */}
@@ -92,22 +90,24 @@ const Contact = () => {
             {faqs.map((question, index) => (
               <div
                 key={index}
-                className="bg-[#242424] rounded-xl overflow-hidden"
+                className={`bg-white rounded-xl overflow-hidden border border-gray-200 transition-shadow duration-300 ${
+                  openIndex === index
+                    ? "shadow-[0_0_20px_#3b82f6]"
+                    : "hover:shadow-[0_0_15px_#3b82f6]"
+                }`}
               >
                 <button
                   onClick={() =>
                     setOpenIndex(openIndex === index ? null : index)
                   }
-                  className="w-full flex justify-between items-center px-6 py-5 text-left text-sm md:text-base font-semibold tracking-wide hover:bg-[#2e2e2e] transition"
+                  className="w-full flex justify-between items-center px-6 py-5 text-left text-sm md:text-base font-semibold tracking-wide"
                 >
                   {question}
-                  <span className="text-xl">
-                    {openIndex === index ? "–" : "→"}
-                  </span>
+                  <span className="text-xl">{openIndex === index ? "–" : "→"}</span>
                 </button>
 
                 {openIndex === index && (
-                  <div className="px-6 pb-6 text-sm opacity-70 leading-relaxed">
+                  <div className="px-6 pb-6 text-sm opacity-80 leading-relaxed">
                     Transmission details are classified. Authorized units will
                     receive further instructions once verification is complete.
                   </div>
@@ -122,3 +122,4 @@ const Contact = () => {
 };
 
 export default Contact;
+

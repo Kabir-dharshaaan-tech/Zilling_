@@ -28,7 +28,6 @@ export default function Observe() {
   useEffect(() => {
     const trigger = triggerRef.current;
     const section = sectionRef.current;
-
     if (!trigger || !section) return;
 
     const observer = new IntersectionObserver(
@@ -46,7 +45,6 @@ export default function Observe() {
 
         window.addEventListener("scroll", onScroll);
         onScroll();
-
         return () => window.removeEventListener("scroll", onScroll);
       },
       { threshold: 1 }
@@ -77,11 +75,10 @@ export default function Observe() {
 
     window.addEventListener("scroll", onScroll);
     onScroll();
-
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* ---------- ARC SCROLL IMAGES ABOVE CREW REGISTRY ---------- */
+  /* ---------- ARC SCROLL IMAGES ---------- */
   const crewSectionRef = useRef(null);
   const imageRefs = useRef([]);
 
@@ -93,25 +90,20 @@ export default function Observe() {
       const vh = window.innerHeight;
       const vw = window.innerWidth;
 
-      // Start animation only when section enters viewport
       if (sectionTop < vh && sectionTop > -crewSectionRef.current.offsetHeight) {
         const scrollY = window.scrollY;
 
         imageRefs.current.forEach((el, i) => {
           if (!el) return;
 
-          const offset = scrollY - crewSectionRef.current.offsetTop - i * 200; // stagger images
+          const offset = scrollY - crewSectionRef.current.offsetTop - i * 200;
           const progress = Math.min(Math.max(offset / vh, 0), 1);
 
-          const radius = vh * 0.2; // vertical arc
+          const radius = vh * 0.2;
           const angle = Math.PI * progress;
-
           const xPos = vw - (vw + 200) * progress;
-
-          // Shift the arc downward by adding an offset to yPos
-          const yOffset = vh * 0.25; // lower the peak by 25% of viewport height
+          const yOffset = vh * 0.25;
           const yPos = yOffset + radius - Math.sin(angle) * radius;
-
           const scale = 0.8 + progress * 0.2;
 
           let opacity = 0;
@@ -134,14 +126,28 @@ export default function Observe() {
       {/* ================= TEXT SECTION ================= */}
       <section
         ref={sectionRef}
-        className="relative min-h-[140vh] w-full overflow-hidden bg-black text-white"
+        className="relative min-h-[140vh] w-full overflow-hidden bg-white text-black"
       >
-        <div className="absolute inset-0 bg-grid pointer-events-none" />
+        {/* GRID BACKGROUND */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+              linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px)
+            `,
+            backgroundSize: "40px 40px",
+          }}
+        />
+
+        {/* GLOW */}
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.12),transparent_70%)]" />
+
         <div ref={triggerRef} className="absolute top-[60vh] h-px w-full" />
 
         <div className="relative mx-auto flex max-w-7xl gap-20 px-12 pt-[60vh] pb-32">
           <div className="w-1/3">
-            <p className="text-xs tracking-widest text-neutral-300">
+            <p className="text-xs tracking-widest text-neutral-500">
               [ WE OBSERVE DISTANT WORLDS ]
             </p>
           </div>
@@ -152,13 +158,14 @@ export default function Observe() {
                 key={i}
                 className="relative overflow-hidden text-[3.2rem] font-extrabold leading-tight"
               >
-                <span className="block text-neutral-700">{line}</span>
+                <span className="block text-neutral-300">{line}</span>
                 <span
-                  className="absolute left-0 top-0 block text-[#f4f1e8] transition-all duration-700 ease-out"
+                  className="absolute left-0 top-0 block text-black transition-all duration-700 ease-out"
                   style={{
                     width: activeLine >= i ? "100%" : "0%",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
+                    textShadow: "0 0 20px rgba(0,0,0,0.25)",
                   }}
                 >
                   {line}
@@ -170,7 +177,7 @@ export default function Observe() {
       </section>
 
       {/* ================= STICKY HORIZONTAL CARDS ================= */}
-      <section ref={horizontalRef} className="relative h-[300vh] bg-black">
+      <section ref={horizontalRef} className="relative h-[300vh] bg-white">
         <div className="sticky top-0 flex h-screen items-center overflow-hidden">
           <div
             ref={trackRef}
@@ -180,9 +187,11 @@ export default function Observe() {
             {CARDS.map((title, i) => (
               <div
                 key={i}
-                className="flex h-[420px] w-[520px] shrink-0 items-end rounded-2xl border border-neutral-700 bg-neutral-900 p-10"
+                className="flex h-[420px] w-[520px] shrink-0 items-end rounded-2xl border border-neutral-700 bg-neutral-900 p-10 text-white shadow-[0_0_40px_rgba(0,0,0,0.6)]"
               >
-                <h2 className="text-4xl font-extrabold tracking-tight">{title}</h2>
+                <h2 className="text-4xl font-extrabold tracking-tight">
+                  {title}
+                </h2>
               </div>
             ))}
           </div>
@@ -190,13 +199,16 @@ export default function Observe() {
       </section>
 
       {/* ================= ARC SCROLL IMAGES ================= */}
-      <div ref={crewSectionRef} className="relative w-full h-[250vh] overflow-hidden">
+      <div
+        ref={crewSectionRef}
+        className="relative w-full h-[250vh] overflow-hidden bg-white"
+      >
         <div className="fixed inset-0 pointer-events-none">
           {[1, 2, 3, 4, 5, 6].map((img, i) => (
             <div
               key={i}
               ref={(el) => (imageRefs.current[i] = el)}
-              className="absolute w-64 h-64 bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl"
+              className="absolute w-64 h-64 bg-neutral-900 border border-neutral-700 rounded-xl shadow-[0_0_50px_rgba(0,0,0,0.6)]"
               style={{
                 transform: `translate(${window.innerWidth}px, ${
                   window.innerHeight * 0.5
@@ -213,8 +225,6 @@ export default function Observe() {
           ))}
         </div>
       </div>
-
-      
     </>
   );
 }
