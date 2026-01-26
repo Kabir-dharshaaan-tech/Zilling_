@@ -36,8 +36,15 @@ const App = () => {
               }
             />
 
-            {/* OTHER ROUTES (SEPARATE CONTEXTS) */}
-            <Route path="/observatory" element={<Observe />} />
+            {/* OTHER ROUTES — NOW WITH GLOBAL BACKGROUND */}
+            <Route
+              path="/observatory"
+              element={
+                <GlobalBackground>
+                  <Observe />
+                </GlobalBackground>
+              }
+            />
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </main>

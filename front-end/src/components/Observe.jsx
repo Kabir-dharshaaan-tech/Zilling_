@@ -1,5 +1,6 @@
 
 
+
 import React, { useEffect, useRef, useState } from "react";
 
 /* ================= ASSET IMAGES ================= */
@@ -104,33 +105,30 @@ export default function Observe() {
     const handleScroll = () => {
       if (!crewSectionRef.current) return;
 
-      const sectionTop = crewSectionRef.current.getBoundingClientRect().top;
       const vh = window.innerHeight;
       const vw = window.innerWidth;
+      const scrollY = window.scrollY;
 
-      if (sectionTop < vh && sectionTop > -crewSectionRef.current.offsetHeight) {
-        const scrollY = window.scrollY;
+      imageRefs.current.forEach((el, i) => {
+        if (!el) return;
 
-        imageRefs.current.forEach((el, i) => {
-          if (!el) return;
+        const offset =
+          scrollY - crewSectionRef.current.offsetTop - i * 220;
+        const progress = Math.min(Math.max(offset / vh, 0), 1);
 
-          const offset = scrollY - crewSectionRef.current.offsetTop - i * 220;
-          const progress = Math.min(Math.max(offset / vh, 0), 1);
+        const radius = vh * 0.22;
+        const angle = Math.PI * progress;
+        const xPos = vw - (vw + 260) * progress;
+        const yOffset = vh * 0.28;
+        const yPos = yOffset + radius - Math.sin(angle) * radius;
+        const scale = 0.85 + progress * 0.15;
 
-          const radius = vh * 0.22;
-          const angle = Math.PI * progress;
-          const xPos = vw - (vw + 260) * progress;
-          const yOffset = vh * 0.28;
-          const yPos = yOffset + radius - Math.sin(angle) * radius;
-          const scale = 0.85 + progress * 0.15;
+        let opacity = progress > 0 ? 1 : 0;
+        if (progress > 0.95) opacity = 1 - (progress - 0.95) * 20;
 
-          let opacity = progress > 0 ? 1 : 0;
-          if (progress > 0.95) opacity = 1 - (progress - 0.95) * 20;
-
-          el.style.transform = `translate(${xPos}px, ${yPos}px) scale(${scale})`;
-          el.style.opacity = opacity;
-        });
-      }
+        el.style.transform = `translate(${xPos}px, ${yPos}px) scale(${scale})`;
+        el.style.opacity = opacity;
+      });
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -143,20 +141,10 @@ export default function Observe() {
       {/* ================= TEXT SECTION ================= */}
       <section
         ref={sectionRef}
-        className="relative min-h-[140vh] w-full overflow-hidden bg-white text-black"
+        className="relative min-h-[140vh] w-full overflow-hidden text-black"
       >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px)
-            `,
-            backgroundSize: "40px 40px",
-          }}
-        />
+        {/* removed background → GlobalBackground visible */}
 
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.12),transparent_70%)]" />
         <div ref={triggerRef} className="absolute top-[60vh] h-px w-full" />
 
         <div className="relative mx-auto flex max-w-7xl gap-20 px-12 pt-[60vh] pb-32">
@@ -191,7 +179,7 @@ export default function Observe() {
       </section>
 
       {/* ================= STICKY HORIZONTAL CARDS ================= */}
-      <section ref={horizontalRef} className="relative h-[300vh] bg-white">
+      <section ref={horizontalRef} className="relative h-[300vh]">
         <div className="sticky top-0 flex h-screen items-center overflow-hidden">
           <div
             ref={trackRef}
@@ -212,12 +200,13 @@ export default function Observe() {
         </div>
       </section>
 
-      {/* ================= ARC SCROLL IMAGES WITH NAMES ================= */}
+      {/* ================= ARC SCROLL IMAGES ================= */}
       <div
         ref={crewSectionRef}
-        className="relative w-full h-[260vh] overflow-hidden bg-white"
+        className="relative w-full h-[260vh] overflow-hidden"
       >
-        <div className="fixed inset-0 pointer-events-none">
+        {/* fixed but BELOW footer */}
+        <div className="fixed inset-0 pointer-events-none z-0">
           {ARC_ITEMS.map((item, i) => (
             <div
               key={i}
@@ -248,27 +237,3 @@ export default function Observe() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

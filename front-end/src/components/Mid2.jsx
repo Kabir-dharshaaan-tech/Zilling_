@@ -38,6 +38,7 @@ export default function Mid2() {
   return (
     <section className="relative w-full">
       <div className="relative h-[700vh]">
+        {/* Sticky card container */}
         <div className="sticky top-0 h-screen flex items-center justify-center">
           {missions.map((m, i) => {
             const active = i === activeIndex;
@@ -48,18 +49,24 @@ export default function Mid2() {
                   active ? "opacity-100 scale-100" : "opacity-0 scale-95"
                 }`}
               >
-                <div className="w-[420px] bg-white rounded-2xl p-5 shadow-2xl">
+                {/* Card */}
+                <div className="w-[380px] h-[550px] bg-white rounded-2xl p-4 shadow-2xl overflow-hidden flex flex-col items-center">
                   <p className="text-xs text-center">{m.id}</p>
-                  <h2 className="text-4xl font-extrabold text-center mb-4">
+                  <h2 className="text-3xl font-extrabold text-center mb-3">
                     {m.title}
                   </h2>
-                  <img src={m.img} alt="" className="rounded-xl" />
+                  <img
+                    src={m.img}
+                    alt=""
+                    className="rounded-xl object-contain h-[450px] w-full"
+                  />
                 </div>
               </div>
             );
           })}
         </div>
 
+        {/* Invisible scroll triggers */}
         {missions.map((_, i) => (
           <div
             key={i}
@@ -72,3 +79,4 @@ export default function Mid2() {
     </section>
   );
 }
+
