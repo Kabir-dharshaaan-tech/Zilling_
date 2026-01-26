@@ -1,4 +1,5 @@
 
+
 import React, { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -8,7 +9,6 @@ const GRID_SIZE = 80;
 /* ================= GRID LAYER ================= */
 const GridLayer = ({ cell }) => (
   <>
-    {/* GRID */}
     <div
       className="absolute inset-0 pointer-events-none"
       style={{
@@ -20,7 +20,6 @@ const GridLayer = ({ cell }) => (
       }}
     />
 
-    {/* SKY-BLUE GLOW */}
     {cell.col >= 0 &&
       cell.row >= 0 &&
       [-2, -1, 0, 1, 2].flatMap((dx) =>
@@ -50,12 +49,11 @@ const GridLayer = ({ cell }) => (
         })
       )}
 
-    {/* VIGNETTE */}
     <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0)_40%,rgba(0,0,0,0.15))]" />
   </>
 );
 
-/* ================= IMPORT IMAGES ================= */
+/* ================= IMAGES ================= */
 import img1 from "../assets/billing_web_1.png";
 import img2 from "../assets/billing_web_2.png";
 import img3 from "../assets/billing_web_3.png";
@@ -88,42 +86,44 @@ export default function Mid3() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full py-40 bg-white overflow-hidden"
+      className="relative w-full py-48 bg-white overflow-hidden"
       onMouseMove={mouseMove}
       onMouseLeave={() => setCell({ col: -1, row: -1 })}
     >
-      {/* GRID BACKGROUND */}
       <GridLayer cell={cell} />
 
       {/* CONTENT */}
-      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 px-4">
-        
+      <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 px-6">
+
         {/* LEFT COLUMN */}
-        <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-16">
           {strength.map((s, i) => {
             const x = useTransform(
               scrollYProgress,
               [0, 0.35, 0.6, 1],
-              [0, -120 * s, -620 * s, -760 * s]
+              [0, -140 * s, -700 * s, -900 * s]
             );
 
-            const y = useTransform(scrollYProgress, [0, 1], [0, -260]);
+            const y = useTransform(scrollYProgress, [0, 1], [0, -320]);
 
             return (
               <motion.div
                 key={i}
                 style={{ x, y }}
                 className="
-                  h-56 md:h-64 rounded-2xl
+                  w-full
+                  aspect-[16/10]
+                  rounded-2xl
                   border border-neutral-300
-                  shadow-xl
+                  shadow-2xl
+                  bg-white
                   overflow-hidden
                 "
               >
                 <img
                   src={images[i]}
                   alt={`card-${i}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </motion.div>
             );
@@ -131,36 +131,40 @@ export default function Mid3() {
         </div>
 
         {/* RIGHT COLUMN */}
-        <div className="flex flex-col gap-12">
+        <div className="flex flex-col gap-16">
           {strength.map((s, i) => {
             const x = useTransform(
               scrollYProgress,
               [0, 0.35, 0.6, 1],
-              [0, 120 * s, 620 * s, 760 * s]
+              [0, 140 * s, 700 * s, 900 * s]
             );
 
-            const y = useTransform(scrollYProgress, [0, 1], [0, -260]);
+            const y = useTransform(scrollYProgress, [0, 1], [0, -320]);
 
             return (
               <motion.div
                 key={i + 3}
                 style={{ x, y }}
                 className="
-                  h-56 md:h-64 rounded-2xl
+                  w-full
+                  aspect-[16/10]
+                  rounded-2xl
                   border border-neutral-300
-                  shadow-xl
+                  shadow-2xl
+                  bg-white
                   overflow-hidden
                 "
               >
                 <img
                   src={images[i + 3]}
                   alt={`card-${i + 3}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </motion.div>
             );
           })}
         </div>
+
       </div>
     </section>
   );

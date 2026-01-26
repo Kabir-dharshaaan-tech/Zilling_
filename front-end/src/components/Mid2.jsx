@@ -1,18 +1,25 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
+/* ================= ASSETS ================= */
+import img1 from "../assets/APP_1.jpeg";
+import img2 from "../assets/APP_2.jpeg";
+import img3 from "../assets/APP_3.jpeg";
+import img4 from "../assets/APP_4.jpeg";
+import img5 from "../assets/APP_5.jpeg";
+
+/* ================= CONFIG ================= */
 const GRID_SIZE = 80;
 
 const missions = [
-  { id: "01 / 05", title: "SOLAR RIDGE" },
-  { id: "02 / 05", title: "SOLAR RIDGE" },
-  { id: "03 / 05", title: "SOLAR RIDGE" },
-  { id: "04 / 05", title: "SOLAR RIDGE" },
-  { id: "05 / 05", title: "SOLAR RIDGE" },
+  { id: "01 / 05", title: "SOLAR RIDGE", img: img1 },
+  { id: "02 / 05", title: "SOLAR RIDGE", img: img2 },
+  { id: "03 / 05", title: "SOLAR RIDGE", img: img3 },
+  { id: "04 / 05", title: "SOLAR RIDGE", img: img4 },
+  { id: "05 / 05", title: "SOLAR RIDGE", img: img5 },
 ];
 
 /* ================= GRID + BLUE THUNDER ================= */
-
 const GridLayer = ({ cell }) => (
   <>
     {/* GRID */}
@@ -63,7 +70,6 @@ const GridLayer = ({ cell }) => (
 );
 
 /* ================= MID2 ================= */
-
 export default function Mid2() {
   const refs = useRef([]);
   const containerRef = useRef(null);
@@ -71,7 +77,7 @@ export default function Mid2() {
   const [activeIndex, setActiveIndex] = useState(-1);
   const [cell, setCell] = useState({ col: -1, row: -1 });
 
-  /* ===== SCROLL LOGIC (unchanged) ===== */
+  /* ===== SCROLL LOGIC ===== */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -138,7 +144,7 @@ export default function Mid2() {
                     ${index > activeIndex ? "opacity-0 translate-y-40 scale-95" : ""}
                   `}
                 >
-                  <div className="w-[420px] bg-white rounded-xl p-6 border border-black/10 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
+                  <div className="max-w-[90vw] w-[420px] bg-white rounded-2xl p-5 border border-black/10 shadow-[0_20px_60px_rgba(0,0,0,0.2)]">
                     <p className="text-center text-xs tracking-widest text-black/60 mb-2">
                       {mission.id}
                     </p>
@@ -147,7 +153,19 @@ export default function Mid2() {
                       {mission.title}
                     </h2>
 
-                    <div className="h-[230px] rounded-lg bg-gradient-to-r from-sky-200 via-blue-300 to-cyan-200" />
+                    {/* IMAGE */}
+                    <div className="w-full rounded-xl overflow-hidden flex justify-center bg-black/5">
+                      <img
+                        src={mission.img}
+                        alt={mission.title}
+                        className="
+                          w-auto
+                          max-h-[360px]
+                          md:max-h-[420px]
+                          object-contain
+                        "
+                      />
+                    </div>
 
                     <p className="text-center text-xs tracking-widest text-black/60 mt-4">
                       [ FIELD REPORT ]
@@ -160,7 +178,12 @@ export default function Mid2() {
         </div>
 
         {/* ================= SCROLL TRIGGERS ================= */}
-        <div ref={(el) => (refs.current[0] = el)} data-index={-1} className="h-screen" />
+        <div
+          ref={(el) => (refs.current[0] = el)}
+          data-index={-1}
+          className="h-screen"
+        />
+
         {missions.map((_, i) => (
           <div
             key={i}
