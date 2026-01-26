@@ -1,4 +1,6 @@
 
+
+
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -9,13 +11,22 @@ const Navbar = () => {
     { label: "CONTACT", path: "/contact" },
   ];
 
+  const handleNavClick = () => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant", // change to "smooth" if needed
+    });
+  };
+
   return (
     <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
       {/* SKY-BLUE BORDER */}
       <div
         className="px-[3px] py-[3px] shadow-xl"
         style={{
-          background: "linear-gradient(135deg, rgb(0,200,255), rgb(120,220,255))",
+          background:
+            "linear-gradient(135deg, rgb(0,200,255), rgb(120,220,255))",
           clipPath:
             "polygon(3% 0%, 97% 0%, 100% 50%, 97% 100%, 3% 100%, 0% 50%)",
         }}
@@ -32,6 +43,7 @@ const Navbar = () => {
             <div key={item.label} className="relative">
               <Link
                 to={item.path}
+                onClick={handleNavClick}
                 className="
                   block px-8 py-3
                   text-black font-semibold
@@ -55,4 +67,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
