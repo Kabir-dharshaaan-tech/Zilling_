@@ -76,3 +76,15 @@ export default function GlobalBackground({ children }) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+

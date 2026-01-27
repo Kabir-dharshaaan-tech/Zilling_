@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useEffect, useRef, useState } from "react";
 
 /* ================= ASSET IMAGES ================= */
@@ -100,7 +101,9 @@ export default function Observe() {
   /* ---------- ARC SCROLL IMAGES ---------- */
   const crewSectionRef = useRef(null);
   const imageRefs = useRef([]);
+  const [hideArc, setHideArc] = useState(false); // ✅ NEW: footer fade state
 
+  // ---------- ARC POSITION LOGIC (unchanged) ----------
   useEffect(() => {
     const handleScroll = () => {
       if (!crewSectionRef.current) return;
@@ -112,8 +115,7 @@ export default function Observe() {
       imageRefs.current.forEach((el, i) => {
         if (!el) return;
 
-        const offset =
-          scrollY - crewSectionRef.current.offsetTop - i * 220;
+        const offset = scrollY - crewSectionRef.current.offsetTop - i * 220;
         const progress = Math.min(Math.max(offset / vh, 0), 1);
 
         const radius = vh * 0.22;
@@ -136,6 +138,23 @@ export default function Observe() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // ---------- FOOTER DETECTOR ----------
+  useEffect(() => {
+    const onScroll = () => {
+      const footer = document.querySelector("footer");
+      if (!footer) return;
+
+      const footerTop = footer.getBoundingClientRect().top;
+      const vh = window.innerHeight;
+
+      setHideArc(footerTop < vh * 0.9);
+    };
+
+    window.addEventListener("scroll", onScroll);
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
       {/* ================= TEXT SECTION ================= */}
@@ -143,8 +162,6 @@ export default function Observe() {
         ref={sectionRef}
         className="relative min-h-[140vh] w-full overflow-hidden text-black"
       >
-        {/* removed background → GlobalBackground visible */}
-
         <div ref={triggerRef} className="absolute top-[60vh] h-px w-full" />
 
         <div className="relative mx-auto flex max-w-7xl gap-20 px-12 pt-[60vh] pb-32">
@@ -191,9 +208,7 @@ export default function Observe() {
                 key={i}
                 className="flex h-[420px] w-[520px] shrink-0 items-end rounded-2xl border border-neutral-700 bg-neutral-900 p-10 text-white shadow-[0_0_40px_rgba(0,0,0,0.6)]"
               >
-                <h2 className="text-4xl font-extrabold tracking-tight">
-                  {title}
-                </h2>
+                <h2 className="text-4xl font-extrabold tracking-tight">{title}</h2>
               </div>
             ))}
           </div>
@@ -201,21 +216,19 @@ export default function Observe() {
       </section>
 
       {/* ================= ARC SCROLL IMAGES ================= */}
-      <div
-        ref={crewSectionRef}
-        className="relative w-full h-[260vh] overflow-hidden"
-      >
-        {/* fixed but BELOW footer */}
-        <div className="fixed inset-0 pointer-events-none z-0">
+      <div ref={crewSectionRef} className="relative w-full h-[260vh] overflow-hidden">
+        {/* ✅ FIXED ARC WITH FADE ON FOOTER */}
+        <div
+          className="fixed inset-0 pointer-events-none z-0 transition-opacity duration-500"
+          style={{ opacity: hideArc ? 0 : 1 }}
+        >
           {ARC_ITEMS.map((item, i) => (
             <div
               key={i}
               ref={(el) => (imageRefs.current[i] = el)}
               className="absolute w-64"
               style={{
-                transform: `translate(${window.innerWidth}px, ${
-                  window.innerHeight * 0.5
-                }px) scale(0.8)`,
+                transform: `translate(${window.innerWidth}px, ${window.innerHeight * 0.5}px) scale(0.8)`,
                 opacity: 0,
               }}
             >
@@ -237,3 +250,14 @@ export default function Observe() {
     </>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
