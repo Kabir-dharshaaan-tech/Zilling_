@@ -1,5 +1,4 @@
 
-
 import React, { useEffect, useRef, useState } from "react";
 import bannerImage from "../assets/banner.png";
 
@@ -18,12 +17,12 @@ export default function Home() {
 
       if (headlineRef.current) {
         const r = headlineRef.current.getBoundingClientRect();
-        setProgress(clamp((vh * 0.85 - r.top) / (vh * 0.5)));
+        setProgress(clamp((vh * 0.8 - r.top) / (vh * 0.4)));
       }
 
       if (wantSectionRef.current) {
         const r = wantSectionRef.current.getBoundingClientRect();
-        setWantProgress(clamp((vh * 0.85 - r.top) / (vh * 0.55)));
+        setWantProgress(clamp((vh * 0.8 - r.top) / (vh * 0.45)));
       }
     };
 
@@ -52,9 +51,12 @@ export default function Home() {
         />
       </section>
 
-      {/* SECTION 1 */}
-      <section ref={headlineRef} className="relative h-screen px-16 pt-48">
-        {["WE OBSERVE", "DISTANT WORLDS"].map((t, i) => {
+      {/* SECTION 1 — HEADLINE */}
+      <section
+        ref={headlineRef}
+        className="relative min-h-[70vh] px-16 flex flex-col justify-center -mb-24"
+      >
+        {["BILLING,", " WITHOUT BARRIERS."].map((t, i) => {
           const p = i === 0 ? line1 : line2;
           return (
             <div key={t} className="relative w-fit">
@@ -72,43 +74,44 @@ export default function Home() {
         })}
       </section>
 
-      {/* SECTION 2 */}
-      <section className="relative h-screen px-16 flex items-center">
+      {/* SECTION 2 — DESCRIPTION */}
+      <section className="relative min-h-[65vh] px-16 flex items-center -mb-20">
         <div className="relative max-w-4xl">
           <p className="text-[2.8rem] font-extrabold uppercase text-[#bdbdbd]">
-            FROM REMOTE COLONIES TO DESERTED OUTPOSTS, EVERY LOCATION WE REACH
-            REVEALS SIGNS OF STRUCTURES AND PRESENCE.
+            A free, open-source billing system built for everyone — individuals,
+            shops, startups, and organizations.
           </p>
           <p
             className="absolute inset-0 text-[2.8rem] font-extrabold uppercase text-black overflow-hidden"
             style={{ clipPath: `inset(0 ${100 - progress * 100}% 0 0)` }}
           >
-            FROM REMOTE COLONIES TO DESERTED OUTPOSTS, EVERY LOCATION WE REACH
-            REVEALS SIGNS OF STRUCTURES AND PRESENCE.
+            A free, open-source billing system built for everyone — individuals,
+            shops, startups, and organizations.
           </p>
         </div>
       </section>
 
-      {/* SECTION 3 */}
-      <section ref={wantSectionRef} className="relative h-screen px-16 pt-32">
-        {["WANT", "WANT", "WANT"].map((t, i) => (
-          <div key={i} className="relative w-fit">
-            <p className="text-[2.8rem] font-extrabold uppercase text-[#c0c0c0]">
-              {t}
-            </p>
-            <p
-              className="absolute inset-0 text-[2.8rem] font-extrabold uppercase text-black overflow-hidden"
-              style={{ clipPath: `inset(0 ${100 - want[i] * 100}% 0 0)` }}
-            >
-              {t}
-            </p>
-          </div>
-        ))}
+      {/* SECTION 3 — FEATURES */}
+      <section
+        ref={wantSectionRef}
+        className="relative min-h-[60vh] px-16 flex flex-col justify-center gap-4"
+      >
+        {["Simple. Powerful", "Offline-ready", "Multi-platform."].map(
+          (t, i) => (
+            <div key={i} className="relative w-fit">
+              <p className="text-[2.8rem] font-extrabold uppercase text-[#c0c0c0]">
+                {t}
+              </p>
+              <p
+                className="absolute inset-0 text-[2.8rem] font-extrabold uppercase text-black overflow-hidden"
+                style={{ clipPath: `inset(0 ${100 - want[i] * 100}% 0 0)` }}
+              >
+                {t}
+              </p>
+            </div>
+          )
+        )}
       </section>
     </>
   );
 }
-
-
-
-
