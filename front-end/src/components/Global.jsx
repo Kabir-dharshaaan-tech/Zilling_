@@ -1,90 +1,151 @@
-import React, { useState } from "react";
 
-const GRID_SIZE = 80;
 
-const GridLayer = ({ cell }) => (
-  <>
-    {/* GRID */}
-    <div
-      className="absolute inset-0 pointer-events-none"
-      style={{
-        backgroundImage: `
-          linear-gradient(to right, rgba(0,0,0,0.12) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(0,0,0,0.12) 1px, transparent 1px)
-        `,
-        backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
-      }}
-    />
 
-    {/* BLUE THUNDER */}
-    {cell.col >= 0 &&
-      cell.row >= 0 &&
-      [-2, -1, 0, 1, 2].flatMap((dx) =>
-        [-2, -1, 0, 1, 2].map((dy) => {
-          const dist = Math.abs(dx) + Math.abs(dy);
-          if (dist > 3) return null;
-          const intensity = Math.max(0, 1 - dist * 0.25);
+import React, { useEffect, useRef, useState } from "react";
 
-          return (
-            <div
-              key={`${dx}-${dy}`}
-              className="absolute pointer-events-none"
-              style={{
-                left: (cell.col + dx) * GRID_SIZE,
-                top: (cell.row + dy) * GRID_SIZE,
-                width: GRID_SIZE,
-                height: GRID_SIZE,
-                boxShadow: `
-                  inset 0 0 0 ${dx === 0 && dy === 0 ? 2 : 1}px rgba(0,200,255,${0.9 * intensity}),
-                  0 0 ${22 * intensity}px rgba(0,200,255,${0.75 * intensity}),
-                  0 0 ${55 * intensity}px rgba(0,200,255,${0.55 * intensity})
-                `,
-              }}
-            />
-          );
-        })
-      )}
+const GRID_SIZE = 40;
+const SMOOTH = 0.18;
+const TRAIL_LENGTH = 6;
+const IDLE_DELAY = 120; // ms before fade starts
+const FADE_SPEED = 0.08;
 
-    {/* VIGNETTE */}
-    <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0)_40%,rgba(0,0,0,0.15))]" />
-  </>
-);
+function GridLayer({ activeCell, trail, fade }) {
+  if (fade <= 0) return null;
+
+  return (
+    <>
+      {/* BASE GRID */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(0,0,0,0.12) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(0,0,0,0.12) 1px, transparent 1px)
+          `,
+          backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
+        }}
+      />
+
+      {/* GLOW CELLS */}
+      {[activeCell, ...trail].map((cell, index) => {
+        if (!cell) return null;
+
+        const intensity =
+          Math.max(0, 1 - index / (TRAIL_LENGTH + 1)) * fade;
+
+        if (intensity <= 0.01) return null;
+
+        return (
+          <div
+            key={`${cell.col}-${cell.row}-${index}`}
+            className="absolute pointer-events-none"
+            style={{
+              left: cell.col * GRID_SIZE,
+              top: cell.row * GRID_SIZE,
+              width: GRID_SIZE,
+              height: GRID_SIZE,
+              boxShadow: `
+                inset 0 0 0 2px rgba(0,180,255,${0.9 * intensity}),
+                0 0 ${25 * intensity}px rgba(0,180,255,${0.7 * intensity}),
+                0 0 ${60 * intensity}px rgba(0,180,255,${0.5 * intensity})
+              `,
+            }}
+          />
+        );
+      })}
+
+      {/* VIGNETTE */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0)_35%,rgba(0,0,0,0.18))]" />
+    </>
+  );
+}
 
 export default function GlobalBackground({ children }) {
-  const [cell, setCell] = useState({ col: -1, row: -1 });
+  const target = useRef({ col: -1, row: -1 });
+  const current = useRef({ col: -1, row: -1 });
+  const trailRef = useRef([]);
+
+  const lastMoveTime = useRef(0);
+  const fadeRef = useRef(0);
+
+  const [, force] = useState(0);
+
+  useEffect(() => {
+    const animate = () => {
+      const now = performance.now();
+      const isMoving = now - lastMoveTime.current < IDLE_DELAY;
+
+      // Fade in / out
+      fadeRef.current += (isMoving ? 1 : 0 - fadeRef.current) * FADE_SPEED;
+      fadeRef.current = Math.max(0, Math.min(1, fadeRef.current));
+
+      // Smooth grid interpolation
+      current.current.col +=
+        (target.current.col - current.current.col) * SMOOTH;
+      current.current.row +=
+        (target.current.row - current.current.row) * SMOOTH;
+
+      const snapped = {
+        col: Math.round(current.current.col),
+        row: Math.round(current.current.row),
+      };
+
+      // Update trail ONLY while moving
+      if (isMoving) {
+        const last = trailRef.current[0];
+        if (
+          !last ||
+          last.col !== snapped.col ||
+          last.row !== snapped.row
+        ) {
+          trailRef.current.unshift(snapped);
+          trailRef.current = trailRef.current.slice(0, TRAIL_LENGTH);
+        }
+      } else {
+        // Clear trail gradually
+        if (trailRef.current.length > 0) {
+          trailRef.current.pop();
+        }
+      }
+
+      force((n) => n + 1);
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+  }, []);
 
   const onMouseMove = (e) => {
-    setCell({
-      col: Math.floor(e.clientX / GRID_SIZE),
-      row: Math.floor(e.clientY / GRID_SIZE),
-    });
+    lastMoveTime.current = performance.now();
+    target.current = {
+      col: Math.floor((e.clientX + window.scrollX) / GRID_SIZE),
+      row: Math.floor((e.clientY + window.scrollY) / GRID_SIZE),
+    };
   };
 
   return (
     <div
       className="relative min-h-screen bg-white"
       onMouseMove={onMouseMove}
-      onMouseLeave={() => setCell({ col: -1, row: -1 })}
+      onMouseLeave={() => {
+        fadeRef.current = 0;
+        trailRef.current = [];
+      }}
     >
-      {/* FIXED BACKGROUND */}
-      <div className="fixed inset-0 z-0">
-        <GridLayer cell={cell} />
+      {/* BACKGROUND */}
+      <div className="absolute inset-0 z-0">
+        <GridLayer
+          activeCell={{
+            col: Math.round(current.current.col),
+            row: Math.round(current.current.row),
+          }}
+          trail={trailRef.current}
+          fade={fadeRef.current}
+        />
       </div>
 
-      {/* PAGE CONTENT */}
+      {/* CONTENT */}
       <div className="relative z-10">{children}</div>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
